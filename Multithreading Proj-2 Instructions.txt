@@ -1,0 +1,114 @@
+PROJECT 2
+
+
+Project Deliverables
+--------------------
+
+Your project deliverables are to be posted to CUNY Blackboard using the Project 2 link.
+
+1) Only one source code file as follows with filename format showing your last name and student id: MYLASTNAME_MYSTUDENTID.c  
+
+ a) At top of the file: your full name and student id in comments, for example:  // MYFIRSTNAME MYLASTNAME MYSTUDENTID
+
+ b) In-line code comments no fewer than every 5 lines of code which describe your algorithmic steps in plain English language.
+    That is, I do not want to see literal syntax transcriptions of the code.  
+
+2) An MS Word or PDF document with a write-up of your software design and an explanation of the issues encountered and resolved. (1 page)
+   The write-up is essay style with no bullet points nor itemized lists nor source code nor pseudo-code listings.
+  
+   Filename format is MYLASTNAME_MYSTUDENTID.doc (or pdf).  You are to use Times New Roman Font with font size = 11 and 1.5 line spacing.
+
+3) Text file of program output (text files only, that is, NO graphics files from copying screen output) according to output format in  
+   Project Instructions further below for your program execution. 
+
+   Filename format is MYLASTNAME_MYSTUDENTID.out
+
+4) Please please ensure that your program will compile and link using the GNU C compiler. I will compile and link your source code to
+   generate an executable file using the following command:
+ 
+	gcc MYLASTNAME_MYSTUDENTID.c  -o MYLASTNAME_MYSTUDENTID.exe -pthread
+
+     or
+
+	gcc MYLASTNAME_MYSTUDENTID.c  -o MYLASTNAME_MYSTUDENTID.exe -lpthread
+
+
+
+Project Specification
+---------------------
+1) This second project is a variation and extension of the pthread summation example discussed extensively in the Chapter 4 lectures. 
+   In your second project you will design and implement a POSIX pthreads multithreaded program that, when executed, has a main program
+   thread, 16 worker child pthreads, and each of the 16 worker child pthreads has its own 3 worker computation child (that is, grandchild of 
+   the main) pthreads.    
+
+   Overall, you have 1 main program thread, 16 worker child pthreads, and 48 worker computation pthreads.
+
+2) The input file has 16,000 numbers. Your main program thread will open and read the input file into a 16,000 element integer array 
+   called InpArray. Each of the 16 worker child pthreads will be responsible for processing its own 1,000 number segment of this integer
+   array as we saw in the lectures for data parallelism.
+
+3) However, what is different in this project from the lectures is that each of the 16 worker child pthreads will make available the
+   geometric average (the nth root of the product of n numbers), the arithmetic average, and the sum for its 1,000 number segment (of
+   the InpArray) to the main program thread. Please note that the worker child pthreads do not actually do the computations themselves. 
+   Instead, the 3 worker computation child  pthreads (grandchildren) will do the computations while the worker child pthread (the parent) 
+   just simply waits for the computations to be completed.
+
+   That is, the first worker computation child pthread determines the geometric average computation, the second worker compuutation child
+   pthread does the arithmetic average, and the third worker computation child pthread does the sum computation.
+
+   When each worker child pthread has received its 3 results from the worker computation child pthreads, the worker child pthread (parent)
+   will make these results available to the main program thread using global array(s) and then terminate.
+
+   After all of the 16 worker pthreads have terminated, the main program thread will compute and provide output for:
+   a) The maximum of the 16 geometric average numbers
+   b) The maximum of the 16 arithmetic average numbers
+   c) The maximum of the 16 sum numbers
+
+   
+Your program execution and command line arguments follows this syntax to provide requested output file for the one input file given on
+the command line:
+
+./MYLASTNAME_MYSTUDENTID.exe INPUT_FILE OUTPUT_FILE
+
+
+
+Project Instructions
+--------------------
+
+1) Your program source code must be provided in the C programming language.
+
+2) You must use the creat(), write(), and close() system calls for output and you MUST use the POSIX pthread multithreaded library. 
+   You ARE otherwise permitted to use C standard I/O library functions and string and math library functions. Please check whether the
+   functions you want to use are are thread-safe (eg., remember the lecture about read () vs pread()). 
+
+3) Program output as follows in which you substitute computation results for these capitalized symbols:
+
+   THREAD_NUMBER -      thread number 0..15
+
+   GEOMETRIC_AVERAGE -  geometric average (that is, the nth root of the product of the n numbers) 
+
+   ARITHMETIC_AVERAGE - arithmetic average (that is, the sum of n numbers  divided by n) 
+
+   SUM  -               sum of the numbers
+
+   MAX_OF_GEOM_AVG -    maximum of all the geometric averages
+
+   MAX_OF_ARITH_AVG -   maximum of all the arithmetic averages
+
+   MAX_OF_SUM -         maximum of all the sums
+
+   
+
+   1) For each and every worker child pthread, the main program thread will write one line to the output file of computation results:
+
+   Worker Child Pthread Number = THREAD_NUMBER : \t Geometric Average = GEOMETRIC_AVERAGE \t Arithmetic Average = ARITHMETIC_AVERAGE \t Sum = SUM \n
+
+   
+   2) The main program thread will also write the following 4 lines of output:
+
+   Main program thread: Max of the Geometric Averages = MAX_OF_GEOM_AVG \n
+   Main program thread: Max of the Arithmetic Averages = MAX_OF_ARITH_AVG \n
+   Main program thread: Max of the Sums = MAX_OF_SUM \n
+   Main program thread: Terminating. \n
+
+

@@ -1,0 +1,2 @@
+gcc -o app main.cpp -pthread -lm
+./app Prj2InpSect26.txt output.txt
